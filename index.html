@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Component Template</title>
+
+        <link rel="stylesheet" href="./dist/component.css">
+    </head>
+    <body>
+        <script src="./dist/component.js"></script>
+        <script>
+            (function(){
+                // https://thiscouldbebetter.wordpress.com/2013/01/31/reading-a-string-from-a-file-in-javascript/
+
+                function FileHelper() {
+                    FileHelper.prototype.readStringFromFileAtPath = function(pathOfFileToReadFrom, callback)
+                    {
+                        var request = new XMLHttpRequest();
+                        request.onload = this.readStringFromFileAtPath_OnLoad.bind(this, callback);
+                        request.open('GET', pathOfFileToReadFrom, true);
+                        request.send();
+                    }
+
+                    FileHelper.prototype.readStringFromFileAtPath_OnLoad = function(callback, event)
+                    {
+                        var request = event.target;
+                        var returnValue = request.responseText;
+                        callback(returnValue);
+                    }
+                }
+
+                new FileHelper().readStringFromFileAtPath('./dist/component.html', inputFileToRead_Changed_2);
+
+                function inputFileToRead_Changed_2(contentsOfFileAsString)
+                {
+                    document.body.insertAdjacentHTML('afterbegin', contentsOfFileAsString);
+                }
+            })();
+
+           var Component = new Component();
+        </script>
+    </body>
+</html>
