@@ -1,4 +1,4 @@
-class Component {
+export class Component {
     protected text: string = 'boo';
 
     protected click() {

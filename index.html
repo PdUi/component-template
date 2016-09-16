@@ -9,37 +9,28 @@
         <link rel="stylesheet" href="./dist/component.css">
     </head>
     <body>
-        <script src="./dist/component.js"></script>
+        <script src="./jspm_packages/system.js"></script>
+        <script src="./config.js"></script>
         <script>
+            window.define = System.amdDefine;
+            window.require = window.requirejs = System.amdRequire;
             (function(){
                 // https://thiscouldbebetter.wordpress.com/2013/01/31/reading-a-string-from-a-file-in-javascript/
 
-                function FileHelper() {
-                    FileHelper.prototype.readStringFromFileAtPath = function(pathOfFileToReadFrom, callback)
-                    {
-                        var request = new XMLHttpRequest();
-                        request.onload = this.readStringFromFileAtPath_OnLoad.bind(this, callback);
-                        request.open('GET', pathOfFileToReadFrom, true);
-                        request.send();
-                    }
+                var request = new XMLHttpRequest();
+                request.onload = insertHTMLFragment.bind(this, document.body);
+                request.open('GET', './dist/component.html', true);
+                request.send();
 
-                    FileHelper.prototype.readStringFromFileAtPath_OnLoad = function(callback, event)
-                    {
-                        var request = event.target;
-                        var returnValue = request.responseText;
-                        callback(returnValue);
-                    }
-                }
-
-                new FileHelper().readStringFromFileAtPath('./dist/component.html', inputFileToRead_Changed_2);
-
-                function inputFileToRead_Changed_2(contentsOfFileAsString)
+                function insertHTMLFragment(element, event)
                 {
-                    document.body.insertAdjacentHTML('afterbegin', contentsOfFileAsString);
+                    element.insertAdjacentHTML('afterbegin', event.target.responseText);
                 }
             })();
-
-           var Component = new Component();
+            var that = this;
+            System.import('./dist/component').then((mod) => {
+                that.Component = new mod.Component();
+            });
         </script>
     </body>
 </html>
